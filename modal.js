@@ -115,3 +115,88 @@ function validateField(field, regEx, message, fieldText) {
     formIsValid = false;
   }
 }
+
+// ----- ANNIVERSAIRE-----
+const birthdate = document.querySelector("#birthdate");
+birthdate.addEventListener("change", function () {
+  validateField(
+    this,
+    isValidDate,
+    "Veuillez entrer une date de naissance valide",
+    document.getElementById("birthdateText")
+  );
+});
+
+const quantity = document.querySelector("#quantity");
+quantity.addEventListener("change", function () {
+  validateField(
+    this,
+    isValidQuantity,
+    "Veuillez indiquer un nombre de tournois valide",
+    document.getElementById("quantityText")
+  );
+});
+
+function validateField(input, validateFn, errorMessage, messageElement) {
+  const validClass = "border-success";
+  const invalidClass = "border-danger";
+  const successMessage = "Champs valide";
+  const successClass = "text-success";
+  const failureClass = "text-danger";
+
+  if (!validateFn(input.value)) {
+    setMessage(input, messageElement, errorMessage, failureClass, invalidClass);
+    return false;
+  } else {
+    setMessage(input, messageElement, successMessage, successClass, validClass);
+    return true;
+  }
+}
+
+function isValidQuantity(value) {
+  const parsedValue = parseInt(value);
+  return !isNaN(parsedValue) && parsedValue > 0 && parsedValue <= 50;
+}
+
+function isValidDate(value) {
+  return !isNaN(Date.parse(value));
+}
+
+function setMessage(input, messageElement, message, messageClass, inputClass) {
+  messageElement.innerHTML = message;
+  messageElement.classList.remove(successClass, failureClass);
+  messageElement.classList.add(messageClass);
+
+  input.classList.remove(validClass, invalidClass);
+  input.classList.add(inputClass);
+}
+
+// ----- NOMBRE DE TOURNOIS -----
+quantity.addEventListener('change', function() {
+  validQuantity(this);
+});
+
+const validQuantity = function() {
+  if(quantity.value === 0 || quantity.value < 0) {       // Si la valeur est égale à 0 ou si la valeur est supérieure à 0
+    quantityText.innerHTML = "Merci d'indiquer le nombre de tournois";
+    quantityText.classList.remove('text-succes');
+    quantityText.classList.add('text-danger');
+    quantity.classList.remove('border-succes');
+    quantity.classList.add('border-danger');
+    return false;
+  }else if(quantity.value > 50) {
+    quantityText.innerHTML = "Nous n'avons pas organisé autant de tournois !";
+    quantityText.classList.remove('text-succes');
+    quantityText.classList.add('text-danger');
+    quantity.classList.remove('border-succes');
+    quantity.classList.add('border-danger');
+    return false;
+  }else {
+    quantityText.innerHTML = "Champs Valide";
+    quantityText.classList.remove('text-danger');
+    quantityText.classList.add('text-succes');
+    quantity.classList.remove('border-danger');
+    quantity.classList.add('border-succes');
+    return true;
+  }
+};
