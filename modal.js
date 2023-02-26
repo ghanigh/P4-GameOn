@@ -200,3 +200,37 @@ const validQuantity = function() {
     return true;
   }
 };
+// ----- VILLES -----
+
+// Fonctions pour les lieux de tournois si d'autres villes sont ajoutés dans le futur
+function verifLocationTournament() {
+  let locTournamentCheck = false; 
+  for(let i = 0; i < locationTournament.length; i++) {
+    const isCheck = locationTournament[i].checked;
+    if(isCheck) {
+      locTournamentCheck = true;
+      return true;
+    }
+  }
+  return false;
+}
+
+locationTournament.forEach((checkedBoxInput) => checkedBoxInput.addEventListener('change', function() {
+  validLocationTournament(); 
+}));
+
+function validLocationTournament() {
+  if(! verifLocationTournament()) {
+      locationText.innerHTML = "Merci de cocher une ville";
+      locationText.classList.remove('text-succes');
+      locationText.classList.add('text-danger');
+      return false;
+  } else {
+      locationText.innerHTML = "Champs valide";
+      locationText.classList.remove('text-danger');
+      locationText.classList.add('text-succes');
+      return true;
+  }
+}
+
+
