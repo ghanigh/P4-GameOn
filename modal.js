@@ -234,3 +234,22 @@ function validLocationTournament() {
 }
 
 
+// ----- CONDITIONS -----
+condition.addEventListener('change', function() {
+  validCondition(this); 
+});
+
+// Vérifie si les conditions sont biens cochées ou non
+const validCondition = function() {
+  if(condition.checked == false ) {                  
+    conditionText.innerHTML = "Merci d'accepter les conditions d'utilisations";
+    conditionText.classList.remove('text-succes');
+    conditionText.classList.add('text-danger');
+    return false;
+  }else {
+    conditionText.innerHTML = "Champs Valide";
+    conditionText.classList.remove('text-danger');
+    conditionText.classList.add('text-succes');
+    return true;
+  }
+};
