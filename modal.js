@@ -1,6 +1,7 @@
 // Menu burger
 const iconMenu = document.querySelector(".icon");
 iconMenu.addEventListener("click", editNav);
+// Affichage du menu
 function editNav() {
   var x = document.getElementById("myTopnav");
   if (x.className === "topnav") {
@@ -40,6 +41,7 @@ const quantityText = document.getElementById("quantityText");
 const locationText = document.getElementById("locationText");
 const conditionText = document.getElementById("conditionText");
 
+
 // Fonction pour afficher les messages de validation sur la page Web
 function showMessage(message) {
   const div = document.createElement("div");
@@ -47,20 +49,6 @@ function showMessage(message) {
   div.classList.add("alert-danger");
   div.innerHTML = message;
   document.querySelector(".validationForm").appendChild(div);
-}
-
-// Événement pour ouvrir ou fermer le formulaire
-// Événement pour ouvrir la fenêtre modale
-modalBtn.forEach((btn) => btn.addEventListener("click", openModal));
-function openModal() {
-  modalbg.style.display = "block";
-}
-
-// Événement pour fermer la fenêtre modale
-const modalBtnClose = document.querySelector(".close");
-modalBtnClose.addEventListener("click", hideModal);
-function hideModal() {
-  modalbg.style.display = "none";
 }
 
 // Création des expressions régulières
@@ -140,11 +128,14 @@ quantity.addEventListener("change", function () {
 function validateField(input, validateFn, errorMessage, messageElement) {
   const validClass = "border-success";
   const invalidClass = "border-danger";
-  const successMessage = "Champs valide";
+  const successMessage = "Champ valide";
   const successClass = "text-success";
   const failureClass = "text-danger";
 
-  if (!validateFn(input.value)) {
+  if (!input.value) {
+    setMessage(input, messageElement, "Veuillez remplir ce champ", failureClass, invalidClass);
+    return false;
+  } else if (!validateFn(input.value)) {
     setMessage(input, messageElement, errorMessage, failureClass, invalidClass);
     return false;
   } else {
@@ -152,6 +143,7 @@ function validateField(input, validateFn, errorMessage, messageElement) {
     return true;
   }
 }
+
 
 function isValidQuantity(value) {
   const parsedValue = parseInt(value);
@@ -162,94 +154,157 @@ function isValidDate(value) {
   return !isNaN(Date.parse(value));
 }
 
-function setMessage(input, messageElement, message, messageClass, inputClass) {
+function setMessage(input, messageElement, message, messageClass, inputClass, validClass, invalidClass) {
+  if (!input || !messageElement || !message || !messageClass || !inputClass) {
+    throw new Error("Les arguments input, messageElement, message, messageClass et inputClass sont obligatoires.");
+  }
+
   messageElement.innerHTML = message;
-  messageElement.classList.remove(successClass, failureClass);
+  messageElement.classList.remove(inputClass + "-success", inputClass + "-failure");
   messageElement.classList.add(messageClass);
 
-  input.classList.remove(validClass, invalidClass);
+  if (validClass && invalidClass) {
+    input.classList.remove(validClass, invalidClass);
+  }
   input.classList.add(inputClass);
 }
 
+
 // ----- NOMBRE DE TOURNOIS -----
 quantity.addEventListener('change', function() {
-  validQuantity(this);
-});
-
-const validQuantity = function() {
-  if(quantity.value === 0 || quantity.value < 0) {       // Si la valeur est égale à 0 ou si la valeur est supérieure à 0
-    quantityText.innerHTML = "Merci d'indiquer le nombre de tournois";
-    quantityText.classList.remove('text-succes');
-    quantityText.classList.add('text-danger');
-    quantity.classList.remove('border-succes');
-    quantity.classList.add('border-danger');
-    return false;
-  }else if(quantity.value > 50) {
-    quantityText.innerHTML = "Nous n'avons pas organisé autant de tournois !";
-    quantityText.classList.remove('text-succes');
-    quantityText.classList.add('text-danger');
-    quantity.classList.remove('border-succes');
-    quantity.classList.add('border-danger');
-    return false;
-  }else {
-    quantityText.innerHTML = "Champs Valide";
-    quantityText.classList.remove('text-danger');
-    quantityText.classList.add('text-succes');
-    quantity.classList.remove('border-danger');
-    quantity.classList.add('border-succes');
-    return true;
+  validateQuantity(this);
+  });
+  
+  function validateQuantity(input) {
+  const errorMessage = "Merci d'indiquer le nombre de tournois";
+  const validClass = "border-success";
+  const invalidClass = "border-danger";
+  const successMessage = "Champs valide";
+  const successClass = "text-success";
+  const failureClass = "text-danger";
+  
+  const isValid = isValidQuantity(input.value);
+  
+  if (!isValid) {
+  setMessage(input, quantityText, errorMessage, failureClass, invalidClass);
+  return false;
+  } else if (input.value > 50) {
+  setMessage(input, quantityText, "Nous n'avons pas organisé autant de tournois !", failureClass, invalidClass);
+  return false;
+  } else {
+  setMessage(input, quantityText, successMessage, successClass, validClass);
+  return true;
   }
-};
-// ----- VILLES -----
-
-// Fonctions pour les lieux de tournois si d'autres villes sont ajoutés dans le futur
-function verifLocationTournament() {
-  let locTournamentCheck = false; 
-  for(let i = 0; i < locationTournament.length; i++) {
-    const isCheck = locationTournament[i].checked;
-    if(isCheck) {
-      locTournamentCheck = true;
-      return true;
-    }
+  }
+  
+  function isValidQuantity(value) {
+  const parsedValue = parseInt(value);
+  return !isNaN(parsedValue) && parsedValue > 0 && parsedValue <= 50;
+  }
+  
+  // ----- VILLES -----
+  const locationTournament = document.querySelectorAll('input[type="radio"]');
+  locationTournament.forEach((checkedBoxInput) => checkedBoxInput.addEventListener('change', function() {
+  validateLocationTournament();
+  }));
+  
+  function validateLocationTournament() {
+  const errorMessage = "Merci de cocher une ville";
+  const successMessage = "Champs valide";
+  const successClass = "text-success";
+  const failureClass = "text-danger";
+  const isChecked = verifLocationTournament();
+  
+  if (!isChecked) {
+  setMessage(locationTournament[0], locationText, errorMessage, failureClass);
+  return false;
+  } else {
+  setMessage(locationTournament[0], locationText, successMessage, successClass);
+  return true;
+  }
+  }
+  
+  function verifLocationTournament() {
+  for (let i = 0; i < locationTournament.length; i++) {
+  if (locationTournament[i].checked) {
+  return true;
+  }
   }
   return false;
-}
-
-locationTournament.forEach((checkedBoxInput) => checkedBoxInput.addEventListener('change', function() {
-  validLocationTournament(); 
-}));
-
-function validLocationTournament() {
-  if(! verifLocationTournament()) {
-      locationText.innerHTML = "Merci de cocher une ville";
-      locationText.classList.remove('text-succes');
-      locationText.classList.add('text-danger');
-      return false;
-  } else {
-      locationText.innerHTML = "Champs valide";
-      locationText.classList.remove('text-danger');
-      locationText.classList.add('text-succes');
-      return true;
   }
-}
+  
+  // ----- CONDITIONS -----
+  const condition = document.querySelector("#checkbox1");
+  condition.addEventListener('change', function() {
+  validateCondition();
+  });
+  
+  function validateCondition() {
+  const errorMessage = "Merci d'accepter les conditions d'utilisations";
+  const successMessage = "Champs valide";
+  const successClass = "text-success";
+  const failureClass = "text-danger";
+  
+  if (!condition.checked) {
+  setMessage(condition, conditionText, errorMessage, failureClass);
+  return false;
+  } else {
+  setMessage(condition, conditionText, successMessage, successClass);
+  return true;
+  }
+  }
+  
+  //----- BTN VALIDATION -----
+  function openRemerciments() {
+  form.style.display = "none";
+  validForm.style.display = "flex";
+  validMessage.innerHTML = "Merci pour votre inscription";
+  }
+  
+  function validate(event) {
+    event.preventDefault();
+  
+    const regExTypeText = /[\w'-]+/;
+    const regExTypeEmail = /\S+@\S+\.\S+/;
+  
+    const firstName = document.querySelector('#firstname');
+    const lastName = document.querySelector('#lastname');
+    const email = document.querySelector('#email');
+    const birthdate = document.querySelector('#birthdate');
+    const quantity = document.querySelector('#quantity');
+  
+    const firstText = document.querySelector('.firstname.error');
+    const lastText = document.querySelector('.lastname.error');
+    const emailText = document.querySelector('.email.error');
+  
+    if (
+      validateField(firstName, regExTypeText, firstText) &&
+      validateField(lastName, regExTypeText, lastText) &&
+      validateField(email, regExTypeEmail, emailText) &&
+      validateBirthdate(birthdate) &&
+      validateQuantity(quantity) &&
+      validateLocationTournament() &&
+      validateCondition()
+    ) {
+      openRemerciments();
+    } else {
+      alert("Merci de remplir correctement votre inscription");
+    }
+  }
+  
+  
+  // Validation du formulaire
+  const btnSubmit = document.getElementById("btnSubmit");
 
-
-// ----- CONDITIONS -----
-condition.addEventListener('change', function() {
-  validCondition(this); 
+  form.addEventListener("submit", validate);
+  
+  btnSubmit.addEventListener("click", function(event) {
+  event.preventDefault(); // Empêche l'envoi par défaut du formulaire
+  if (form.checkValidity()) {
+    form.submit(); // Envoyer le formulaire si tout est valide
+  } else {
+    // Afficher un message d'erreur ou une indication pour l'utilisateur
+    // sur les champs de saisie qui ont besoin d'être corrigés
+  }
 });
 
-// Vérifie si les conditions sont biens cochées ou non
-const validCondition = function() {
-  if(condition.checked == false ) {                  
-    conditionText.innerHTML = "Merci d'accepter les conditions d'utilisations";
-    conditionText.classList.remove('text-succes');
-    conditionText.classList.add('text-danger');
-    return false;
-  }else {
-    conditionText.innerHTML = "Champs Valide";
-    conditionText.classList.remove('text-danger');
-    conditionText.classList.add('text-succes');
-    return true;
-  }
-};
