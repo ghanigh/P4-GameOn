@@ -127,6 +127,20 @@ validateField(fieldValue, validateFn);
 
 });
 
+// On définit une variable appelée "fieldValue" On lui assigne une chaîne de caractères vide comme valeur initiale.
+var fieldValue = "";
+// utilise la méthode getElementById du document pour récupérer un élément HTML avec l'identifiant "input-field" et le stocke dans la variable "inputField".
+var inputField = document.getElementById("input-field");
+
+if (inputField !== null) {
+  // Accéder à la propriété value du champ de saisie
+  var inputValue = inputField.value;
+  console.log(inputValue);
+} else {
+  console.log("The input field was not found.");
+}
+
+
 function validateField(input, validateFn, errorMessage, messageElement) {
   if (!input.value) {
     setMessage(input, messageElement, "Veuillez remplir ce champ", true);
