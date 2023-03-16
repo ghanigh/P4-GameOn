@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Reservation</title>
+    <title>Reservation GameOn</title>
     <link rel="stylesheet" href="modal.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=DM+Sans" rel="stylesheet"/>
@@ -22,7 +22,7 @@
         <a href="#"><span>À propos</span></a>
         <a href="#"><span>Contact</span></a>
         <a href="#"><span>Évènements passés</span></a>
-        <a href="#" class="icon"><i class="fa fa-bars"></i></a>
+        <a href="javascript:void(0);" class="icon" onclick="editNav()"><i class="fa fa-bars"></i></a>
       </div>
 
     </div>
@@ -64,8 +64,8 @@
               <div class="formData">
                 <label for="first">Prénom</label><br>
                 <input class="text-control" type="text" id="first" name="first" minlength="2"/><br>
-                <div id="firstText"></div>
               </div>
+              <div id="firstText"></div>
 
               <div class="formData">
                 <label for="last">Nom</label><br>
@@ -134,10 +134,14 @@
               </div>
 
               <input id="btnSubmit" class="button btn-submit" type="submit" value="C'est parti"/>
-              <div id="message"></div>
-
 
             </form>
+
+            <!-- Validation du formulaire -->
+            <div class="validationForm">
+              <p id="validMessage"></p>
+              <input id="btnValid" class="button btn-submit" type="button"  value="Fermer"/>
+            </div>
 
           </div> 
         </div>

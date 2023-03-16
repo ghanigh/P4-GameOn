@@ -1,7 +1,4 @@
-// Menu burger
-const iconMenu = document.querySelector(".icon");
-iconMenu.addEventListener("click", editNav);
-// Affichage du menu
+//@ts-nocheck
 function editNav() {
   var x = document.getElementById("myTopnav");
   if (x.className === "topnav") {
@@ -11,312 +8,250 @@ function editNav() {
   }
 }
 
-// launch modal form
-const modalBtn = document.querySelectorAll(".modal-btn");
-modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
-function launchModal() {
-  modalbg.style.display = "block";
-}
-
-// close modal form
-const modalClose = document.querySelector(".close");
-modalClose.addEventListener("click", closeModal);
-function closeModal() {
-  modalbg.style.display = "none";
-}
-
+// DOM Elements
+// La constante "modalbg" sélectionne l'élément HTML avec la classe "bground".
+// La constante "modalBtn" sélectionne tous les éléments HTML avec la classe "modal-btn".
+// La constante "modalBtnClose" sélectionne l'élément HTML avec la classe "close".
+// La constante "formData" sélectionne tous les éléments HTML avec la classe "formData".
+// La constante "form" sélectionne l'élément HTML avec l'ID "form".
 // La constante "validForm" sélectionne l'élément HTML avec la classe "validationForm
 const modalbg = document.querySelector(".bground");
+const modalBtn = document.querySelectorAll(".modal-btn");
+const modalBtnClose = document.querySelector(".close");
 const formData = document.querySelectorAll(".formData");
 const form = document.getElementById("form");
 const validForm = document.querySelector(".validationForm");
 
-// Constantes pour les champs valides ou non
+
+// Const récupérer les champs du formulaire
+// Ce code déclare des constantes qui représentent des éléments HTML dans une page web.
+// Les constantes incluent des entrées de formulaire telles que "firstName", "lastName", "email", "birthdate", "quantity", "locationTournament",
+// une case à cocher "condition", des boutons "btnSubmit" et "btnValid", et des messages de validation "validMessage".
+// Les constantes sont définies en utilisant la fonction "document.getElementById" pour trouver des éléments en fonction de leur id HTML
+// et "document.getElementsByName" pour trouver des éléments en fonction de leur nom HTML.
+const firstName = document.getElementById("first");
+const lastName = document.getElementById("last");
+const email = document.getElementById("email");
+const birthdate = document.getElementById("birthdate");
+const quantity = document.getElementById("quantity");
+const locationTournament = document.getElementsByName("location");
+const condition = document.getElementById("checkbox1");
+const validMessage = document.getElementById("validMessage");
+const btnSubmit = document.getElementById("btnSubmit");
+const btnValid = document.getElementById("btnValid");
+
+
+// Constant pour les champs valide ou non
 // Ces variables sont des références à des éléments HTML avec des identificateurs correspondants
 // Ils sont utilisés pour récupérer les valeurs saisies par l'utilisateur dans des champs de formulaire et pour afficher des messages de validation sur la page Web.
 const firstText = document.getElementById("firstText");
 const lastText = document.getElementById("lastText");
+const emailText = document.getElementById("emailText");
 const birthdateText = document.getElementById("birthdateText");
 const quantityText = document.getElementById("quantityText");
 const locationText = document.getElementById("locationText");
 const conditionText = document.getElementById("conditionText");
 
-// Fonction pour afficher les messages de validation sur la page Web
-function showMessage(message) {
-  const div = document.createElement("div");
-  div.classList.add("alert");
-  div.classList.add("alert-danger");
-  div.innerHTML = message;
-  document.querySelector(".validationForm").appendChild(div);
-}
 
-// Création des expressions régulières
-const regExTypeText = new RegExp(
-  "^([A-Za-z]{2,20})?([-]{0,1})?([A-Za-z]{2,20})$"
+// ----- Evènement pour ouvrir ou fermer le Formulaire -----
+
+// Open modal event
+modalBtn.forEach((btn) => btn.addEventListener("click", openModal));
+
+// Open modal form
+// Ajout a modalbg un display : block; au css css pour le faire apparaitre
+function openModal() {
+  modalbg.style.display = "block";
+};
+
+// Hidemodal form
+// Ajout a modalbg un display : none; au css pour le faire disparaitre
+function hideModal() {
+  modalbg.style.display = "none";
+};
+
+// Close modal form 
+modalBtnClose.addEventListener("click", function () {          // Évènement au click
+  modalbg.style.display = "none";                             // Pour fermer la modal avec le bouton close
+});
+
+// Création des RegEx
+let regExTypeText = new RegExp(
+  '^([A-Za-z]{2,20})?([-]{0,1})?([A-Za-z]{2,20})$'            // Une expression rationnelle qui prends en condition des lettres en Maj et Min entre 2 à 20 + - + 2 à 20 de plus ex : Jean-Michel
 );
-const regExTypeEmail = new RegExp(
-  "^[a-zA-Z0-9.-]+[@]{1}[a-zA-Z0-9.-]+[.]{1}[a-z]{2,10}$"
+let regExTypeEmail = new RegExp(                              // Une expression rationnelle qui prends en condition pour les emails
+  '^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$'
 );
 
-// Fonction générique pour les champs FirstName + LastName + Email
-const firstName = document.querySelector("#first");
-firstName.addEventListener("change", function () {
-  validateField(
-    this,
-    regExTypeText,
-    "Veuillez rentrer deux caractères minimum",
-    firstText
-  );
+// ----- Fonction générique pour les FirstName + LastName + Email -----
+firstName.addEventListener('change', function () {
+  generiqueValidate(this, regExTypeText, "Veuillez rentrer deux caractères minimum", firstText, this);
 });
 
-const lastName = document.querySelector("#last");
-lastName.addEventListener("change", function () {
-  validateField(
-    this,
-    regExTypeText,
-    "Veuillez rentrer deux caractères minimum",
-    lastText
-  );
+lastName.addEventListener('change', function () {
+  generiqueValidate(this, regExTypeText, "Veuillez rentrer deux caractères minimum", lastText, this);
 });
 
-const email = document.querySelector("#email");
-email.addEventListener("change", function () {
-  validateField(
-    this,
-    regExTypeEmail,
-    "Veuillez rentrer une adresse email valide",
-    document.getElementById("emailText")
-  );
+email.addEventListener('change', function () {
+  generiqueValidate(this, regExTypeEmail, "Veuillez rentrer un adresse email valide", emailText, this);
 });
 
-// Fonction pour valider le champ avec une expression régulière et afficher un message en cas d'erreur
-function validateField(field, regEx, message, fieldText) {
-  if (regEx.test(field.value)) {
-    field.classList.remove("error");
-    fieldText.innerHTML = "";
-    formIsValid = true;
+
+function generiqueValidate(input, regEx, msg, label, border) {    // Paramètres
+
+  let testValid = regEx.test(input.value);                    // Un test du RegEx en récupérant la valeur
+
+  if (testValid) {
+    label.innerHTML = "Champs Valide";
+    label.classList.remove('text-danger');
+    label.classList.add('text-succes');
+    border.classList.remove('border-danger');
+    border.classList.add('border-succes');
+    return true;
   } else {
-    fieldText.setAttribute("data-error", "error");
-    fieldText.classList.add("error");
-    fieldText.innerHTML = message;
-    formIsValid = false;
+    label.innerHTML = msg;
+    label.classList.remove('text-succes');
+    label.classList.add('text-danger');
+    border.classList.remove('border-succes');
+    border.classList.add('border-danger');
+    return false;
   }
 }
 
 // ----- ANNIVERSAIRE-----
-const birthdate = document.querySelector("#birthdate");
-birthdate.addEventListener("change", function () {
-  validateField(
-    this,
-    isValidDate,
-    "Veuillez entrer une date de naissance valide",
-    document.getElementById("birthdateText")
-  );
+birthdate.addEventListener('change', function () {
+  validBirthdate(this);
 });
 
-const quantity = document.querySelector("#quantity");
-quantity.addEventListener("change", function () {
-  validateField(
-    this,
-    isValidQuantity,
-    "Veuillez indiquer un nombre de tournois valide",
-    document.getElementById("quantityText")
-  );
-  const fieldValue = inputField.value.trim();
-validateField(fieldValue, validateFn);
+const validBirthdate = function () {
 
-});
-
-// On définit une variable appelée "fieldValue" On lui assigne une chaîne de caractères vide comme valeur initiale.
-var fieldValue = "";
-// utilise la méthode getElementById du document pour récupérer un élément HTML avec l'identifiant "input-field" et le stocke dans la variable "inputField".
-var inputField = document.getElementById("input-field");
-
-if (inputField !== null) {
-  // Accéder à la propriété value du champ de saisie
-  var inputValue = inputField.value;
-  console.log(inputValue);
-} else {
-  console.log("The input field was not found.");
-}
-
-
-function validateField(input, validateFn, errorMessage, messageElement) {
-  if (!input.value) {
-    setMessage(input, messageElement, "Veuillez remplir ce champ", true);
-    return true;
-  }
-  if (typeof validateFn === "function" && !validateFn(fieldValue))
-  {
-
-    setMessage(input, messageElement, errorMessage, true);
+  if (!birthdate) {
+    birthdateText.innerHTML = "Veuillez entrer une date de naissance valide";
+    birthdateText.classList.remove('text-succes');
+    birthdateText.classList.add('text-danger');
+    birthdate.classList.remove('border-succes');
+    birthdate.classList.add('border-danger');
     return false;
   } else {
-    setMessage(input, messageElement, "champ valide", false);
-    return false;
-  }
-}
-
-
-function isValidQuantity(value) {
-  const parsedValue = parseInt(value);
-  return !isNaN(parsedValue) && parsedValue > 0 && parsedValue <= 50;
-}
-
-function isValidDate(value) {
-  return !isNaN(Date.parse(value));
-}
-
-// Affiche le message d'erreur ou de succes
-function setMessage(input, messageElement, message, success) {
-  const invalidClass = "border-danger";
-  const validClass = "border-success";
-  const successClass = "text-success";
-  const failureClass = "text-danger";
-
-  messageElement.innerHTML = message;
-  // Affichage du message de succes
-  if (success) {
-    input.classList.remove(invalidClass);
-    input.classList.add(validClass);
-    messageElement.classList.remove(failureClass);
-    messageElement.classList.add(successClass);
-
+    birthdateText.innerHTML = "Champs Valide";
+    birthdateText.classList.remove('text-danger');
+    birthdateText.classList.add('text-succes');
+    birthdate.classList.remove('border-danger');
+    birthdate.classList.add('border-succes');
     return true;
   }
-  // Affichage du message d'erreurs
-  input.classList.remove(validClass);
-  input.classList.add(invalidClass);
-  messageElement.classList.remove(successClass);
-  messageElement.classList.add(failureClass);
-
-  return false;
-}
+};
 
 // ----- NOMBRE DE TOURNOIS -----
-quantity.addEventListener("change", function () {
-  validateQuantity(this);
+quantity.addEventListener('change', function () {
+  validQuantity(this);
 });
 
-function validateQuantity(input) {
-  const isValid = isValidQuantity(input.value);
-
-  if (!isValid) {
-    setMessage(input, quantityText, "Champs valide", true);
-    return true
-  } else if (input.value > 50) {
-    setMessage(input, quantityText, "Nous n'avons pas organisé autant de tournois !", false);
+const validQuantity = function () {
+  if (quantity.value === 0 || quantity.value < 0) {       // Si la valeur est égale à 0 ou si la valeur est supérieure à 0
+    quantityText.innerHTML = "Merci d'indiquer le nombre de tournois";
+    quantityText.classList.remove('text-succes');
+    quantityText.classList.add('text-danger');
+    quantity.classList.remove('border-succes');
+    quantity.classList.add('border-danger');
+    return false;
+  } else if (quantity.value > 50) {
+    quantityText.innerHTML = "Nous n'avons pas organisé autant de tournois !";
+    quantityText.classList.remove('text-succes');
+    quantityText.classList.add('text-danger');
+    quantity.classList.remove('border-succes');
+    quantity.classList.add('border-danger');
     return false;
   } else {
-    setMessage(input, quantityText, "Merci d'indiquer le nombre de tournois", false);
-    return false;
-   ; 
+    quantityText.innerHTML = "Champs Valide";
+    quantityText.classList.remove('text-danger');
+    quantityText.classList.add('text-succes');
+    quantity.classList.remove('border-danger');
+    quantity.classList.add('border-succes');
+    return true;
   }
-}
-
-function isValidQuantity(value) {
-  const parsedValue = parseInt(value);
-  return !isNaN(parsedValue) && parsedValue > 0 && parsedValue <= 50;
-}
+};
 
 // ----- VILLES -----
-const locationTournament = document.querySelectorAll('input[type="radio"]');
-locationTournament.forEach((checkedBoxInput) =>
-  checkedBoxInput.addEventListener("change", function () {
-    validateLocationTournament();
-  })
-);
 
-// Validation du nombre de tournois
-function validateLocationTournament() {
-  if (verifLocationTournament()) {
-    return setMessage(locationTournament[0], locationText, true, "Champs valide");
-  }
-  return setMessage(locationTournament[0], locationText, false, "Merci de cocher une ville");
-}
-
+// Fonctions pour les lieux de tournois si d'autres villes sont ajoutés dans le futur
 function verifLocationTournament() {
+  let locTournamentCheck = false;
   for (let i = 0; i < locationTournament.length; i++) {
-    if (locationTournament[i].checked) {
+    const isCheck = locationTournament[i].checked;
+    if (isCheck) {
+      locTournamentCheck = true;
       return true;
     }
   }
   return false;
 }
 
+locationTournament.forEach((checkedBoxInput) => checkedBoxInput.addEventListener('change', function () {
+  validLocationTournament();
+}));
+
+function validLocationTournament() {
+  if (!verifLocationTournament()) {
+    locationText.innerHTML = "Merci de cocher une ville";
+    locationText.classList.remove('text-succes');
+    locationText.classList.add('text-danger');
+    return false;
+  } else {
+    locationText.innerHTML = "Champs valide";
+    locationText.classList.remove('text-danger');
+    locationText.classList.add('text-succes');
+    return true;
+  }
+}
+
 
 // ----- CONDITIONS -----
-const condition = document.querySelector("#checkbox1");
-condition.addEventListener("change", function () {
-  validateCondition();
+condition.addEventListener('change', function () {
+  validCondition(this);
 });
 
-function validateCondition() {
-  const errorMessage = "Merci d'accepter les conditions d'utilisations";
-  const successMessage = "Champs valide";
-  const successClass = "text-success";
-  const failureClass = "text-danger";
-
-  if (!condition.checked) {
-    setMessage(condition, conditionText, successClass, successMessage);
-    return true;
-  } else {
-    setMessage(condition, conditionText, failureClass, errorMessage);
+// Vérifie si les conditions sont biens cochées ou non
+const validCondition = function () {
+  if (condition.checked == false) {
+    conditionText.innerHTML = "Merci d'accepter les conditions d'utilisations";
+    conditionText.classList.remove('text-succes');
+    conditionText.classList.add('text-danger');
     return false;
+  } else {
+    conditionText.innerHTML = "Champs Valide";
+    conditionText.classList.remove('text-danger');
+    conditionText.classList.add('text-succes');
+    return true;
   }
-  
-}
+};
 
 //----- BTN VALIDATION -----
 function openRemerciments() {
   form.style.display = "none";
   validForm.style.display = "flex";
   validMessage.innerHTML = "Merci pour votre inscription";
-}
+};
 
-function validate(event) {
-  event.preventDefault();
+function validate() {
+  // Condition qui vérifie si tous les autres conditions retourne true
+  if (generiqueValidate(firstName, regExTypeText, "firstname error", firstText, firstName)
+    && generiqueValidate(lastName, regExTypeText, "lastname error", lastText, lastName)
+    && generiqueValidate(email, regExTypeEmail, "email error", emailText, email)
+    && validBirthdate(birthdate)
+    && validQuantity(quantity)
+    && validLocationTournament()
+    && validCondition(condition)) {
 
-  const regExTypeText = /[\w'-]+/;
-  const regExTypeEmail = /\S+@\S+\.\S+/;
-
-  const firstName = document.querySelector("#firstname");
-  const lastName = document.querySelector("#lastname");
-  const email = document.querySelector("#email");
-  const birthdate = document.querySelector("#birthdate");
-  const quantity = document.querySelector("#quantity");
-
-  const firstText = document.querySelector(".firstname.error");
-  const lastText = document.querySelector(".lastname.error");
-  const emailText = document.querySelector(".email.error");
-
-  if (
-    validateField(firstName, regExTypeText, firstText) &&
-    validateField(lastName, regExTypeText, lastText) &&
-    validateField(email, regExTypeEmail, emailText) &&
-    validateBirthdate(birthdate) &&
-    validateQuantity(quantity) &&
-    validateLocationTournament() &&
-    validateCondition()
-  ) {
     openRemerciments();
+
   } else {
     alert("Merci de remplir correctement votre inscription");
   }
 }
 
-// Validation du formulaire
-const btnSubmit = document.getElementById("btnSubmit");
+//----- BTN SUBMIT -----
 
-form.addEventListener("submit", validate);
-
-btnSubmit.addEventListener("click", function (event) {
-  event.preventDefault(); // Empêche l'envoi par défaut du formulaire
-  if (form.checkValidity()) {
-    const modalBody = document.getElementsByClassName("modal-body");
-    modalBody.innerHTML = "bravo pour votre inscription !";
-  } else {
-    // Afficher un message d'erreur ou une indication pour l'utilisateur
-    // sur les champs de saisie qui ont besoin d'être corrigés
-  }
+btnValid.addEventListener("click", function () {
+  window.location.reload();
 });
