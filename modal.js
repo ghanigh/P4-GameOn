@@ -9,6 +9,7 @@ function editNav() {
 }
 
 // DOM Elements
+
 // La constante "modalbg" sélectionne l'élément HTML avec la classe "bground".
 // La constante "modalBtn" sélectionne tous les éléments HTML avec la classe "modal-btn".
 // La constante "modalBtnClose" sélectionne l'élément HTML avec la classe "close".
@@ -24,6 +25,7 @@ const validForm = document.querySelector(".validationForm");
 
 
 // Const récupérer les champs du formulaire
+
 // Ce code déclare des constantes qui représentent des éléments HTML dans une page web.
 // Les constantes incluent des entrées de formulaire telles que "firstName", "lastName", "email", "birthdate", "quantity", "locationTournament",
 // une case à cocher "condition", des boutons "btnSubmit" et "btnValid", et des messages de validation "validMessage".
@@ -41,7 +43,8 @@ const btnSubmit = document.getElementById("btnSubmit");
 const btnValid = document.getElementById("btnValid");
 
 
-// Constant pour les champs valide ou non
+// ---- Constant pour les champs valide ou non ---
+
 // Ces variables sont des références à des éléments HTML avec des identificateurs correspondants
 // Ils sont utilisés pour récupérer les valeurs saisies par l'utilisateur dans des champs de formulaire et pour afficher des messages de validation sur la page Web.
 const firstText = document.getElementById("firstText");
@@ -59,19 +62,21 @@ const conditionText = document.getElementById("conditionText");
 modalBtn.forEach((btn) => btn.addEventListener("click", openModal));
 
 // Open modal form
+
 // Ajout a modalbg un display : block; au css css pour le faire apparaitre
 function openModal() {
   modalbg.style.display = "block";
 };
 
-// Hidemodal form
+// -- Hidemodal form ---
+
 // Ajout a modalbg un display : none; au css pour le faire disparaitre
 function hideModal() {
   modalbg.style.display = "none";
 };
 
 // Close modal form 
-modalBtnClose.addEventListener("click", function () {          // Évènement au click
+modalBtnClose.addEventListener("click", function () {         
   modalbg.style.display = "none";                             // Pour fermer la modal avec le bouton close
 });
 
@@ -85,61 +90,59 @@ let regExTypeEmail = new RegExp(                              // Une expression 
 
 // ----- Fonction générique pour les FirstName + LastName + Email -----
 firstName.addEventListener('change', function () {
-  generiqueValidate(this, regExTypeText, "Veuillez rentrer deux caractères minimum", firstText, this);
+  generiqueValidate(this, regExTypeText, "Veuillez rentrer deux caractères minimum", firstText);
 });
 
 lastName.addEventListener('change', function () {
-  generiqueValidate(this, regExTypeText, "Veuillez rentrer deux caractères minimum", lastText, this);
+  generiqueValidate(this, regExTypeText, "Veuillez rentrer deux caractères minimum", lastText);
 });
 
 email.addEventListener('change', function () {
-  generiqueValidate(this, regExTypeEmail, "Veuillez rentrer un adresse email valide", emailText, this);
+  generiqueValidate(this, regExTypeEmail, "Veuillez rentrer un adresse email valide", emailText);
 });
 
-
-function generiqueValidate(input, regEx, msg, label, border) {    // Paramètres
-
-  let testValid = regEx.test(input.value);                    // Un test du RegEx en récupérant la valeur
+// Paramètres
+function generiqueValidate(input, regEx, msg, label) {    
+// Un test du RegEx en récupérant la valeur
+  let testValid = regEx.test(input.value);                    
 
   if (testValid) {
-    label.innerHTML = "Champs Valide";
-    label.classList.remove('text-danger');
-    label.classList.add('text-succes');
-    border.classList.remove('border-danger');
-    border.classList.add('border-succes');
-    return true;
-  } else {
-    label.innerHTML = msg;
-    label.classList.remove('text-succes');
-    label.classList.add('text-danger');
-    border.classList.remove('border-succes');
-    border.classList.add('border-danger');
-    return false;
+   return succesMessage(input, label);
   }
+
+  return errorMessage(input, msg, label);  
+  }
+
+function errorMessage(input, msg, label) {
+  label.innerHTML = msg;
+  label.classList.remove('text-succes');
+  label.classList.add('text-danger');
+  input.classList.remove('border-succes');
+  input.classList.add('border-danger');
+
+   return false;
 }
 
+function succesMessage(input, label){
+  label.innerHTML = "Champs Valide";
+  label.classList.remove('text-danger');
+  label.classList.add('text-succes');
+  input.classList.remove('border-danger');
+  input.classList.add('border-succes');
+
+  return true;
+}
 // ----- ANNIVERSAIRE-----
 birthdate.addEventListener('change', function () {
   validBirthdate(this);
 });
 
 const validBirthdate = function () {
-
-  if (!birthdate) {
-    birthdateText.innerHTML = "Veuillez entrer une date de naissance valide";
-    birthdateText.classList.remove('text-succes');
-    birthdateText.classList.add('text-danger');
-    birthdate.classList.remove('border-succes');
-    birthdate.classList.add('border-danger');
-    return false;
-  } else {
-    birthdateText.innerHTML = "Champs Valide";
-    birthdateText.classList.remove('text-danger');
-    birthdateText.classList.add('text-succes');
-    birthdate.classList.remove('border-danger');
-    birthdate.classList.add('border-succes');
-    return true;
+  if (birthdate) {
+    return succesMessage(birthdate, birthdateText);
   }
+
+  return errorMessage(birthdate, "Veuillez entrer une date de naissance valide", birthdateText);
 };
 
 // ----- NOMBRE DE TOURNOIS -----
