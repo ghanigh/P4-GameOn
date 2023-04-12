@@ -51,7 +51,7 @@ const quantityText = document.getElementById("quantityText");
 const locationText = document.getElementById("locationText");
 const conditionText = document.getElementById("conditionText");
 
-// ----- Evènement pour ouvrir ou fermer le Formulaire -----
+// ----- Evènement pour ouvrir ou fermer le Formulaire ------
 
 // Open modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", openModal));
