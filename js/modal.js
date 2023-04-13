@@ -119,6 +119,7 @@ function generiqueValidate(input, regEx, msg, label, border) {    // Paramètres
 const validBirthdate = function () {
   const birthdate = document.getElementById('birthdate');
   const birthdateText = document.getElementById('birthdateText');
+  const today = new Date(); // Date d'aujourd'hui
 
   if (!birthdate.value) {
     birthdateText.innerHTML = "Veuillez entrer une date de naissance valide";
@@ -128,23 +129,29 @@ const validBirthdate = function () {
     birthdate.classList.add('border-danger');
     return false;
   } else {
-    birthdateText.innerHTML = "Champs Valide";
-    birthdateText.classList.remove('text-danger');
-    birthdateText.classList.add('text-success');
-    birthdate.classList.remove('border-danger');
-    birthdate.classList.add('border-success');
-    return true;
+    const inputDate = new Date(birthdate.value); // Date de naissance entrée par l'utilisateur
+    if (inputDate >= today) {
+      birthdateText.innerHTML = "La date de naissance doit être antérieure à la date d'aujourd'hui";
+      birthdateText.classList.remove('text-success');
+      birthdateText.classList.add('text-danger');
+      birthdate.classList.remove('border-success');
+      birthdate.classList.add('border-danger');
+      return false;
+    } else {
+      birthdateText.innerHTML = "Champs Valide";
+      birthdateText.classList.remove('text-danger');
+      birthdateText.classList.add('text-success');
+      birthdate.classList.remove('border-danger');
+      birthdate.classList.add('border-success');
+      return true;
+    }
   }
 };
 
 // ----- NOMBRE DE TOURNOIS -----
-quantity.addEventListener('change', function () {
-  validQuantity(this);
-});
-
 const validQuantity = function () {
-  if (quantity.value <= 0) {       // Si la valeur est inférieure ou égale à 0
-    quantityText.innerHTML = "Merci d'indiquer le nombre de tournois";
+  if (quantity.value < 0) {       // Si la valeur est inférieure à 0
+    quantityText.innerHTML = "Merci d'indiquer un nombre de tournois valide";
     quantityText.classList.remove('text-succes');
     quantityText.classList.add('text-danger');
     quantity.classList.remove('border-succes');
@@ -229,19 +236,42 @@ function openRemerciments() {
 
 function validate() {
   // Condition qui vérifie si tous les autres conditions retourne true
-  if (generiqueValidate(firstName, regExTypeText, "firstname error", firstText, firstName)
-    && generiqueValidate(lastName, regExTypeText, "lastname error", lastText, lastName)
-    && generiqueValidate(email, regExTypeEmail, "email error", emailText, email)
-    && validBirthdate(birthdate)
-    && validQuantity(quantity)
-    && validLocationTournament()
-    && validCondition(condition)) {
-
-    openRemerciments();
-
-  } else {
-    alert("Merci de remplir correctement votre inscription");
+  if (firstName.value.trim() === '') {
+    alert('Veuillez remplir le champ prénom');
+    firstName.focus();
+    return false;
   }
+  
+  if (lastName.value.trim() === '') {
+    alert('Veuillez remplir le champ nom');
+    lastName.focus();
+    return false;
+  }
+  
+  if (email.value.trim() === '') {
+    alert('Veuillez remplir le champ email');
+    email.focus();
+    return false;
+  }
+  
+  if (birthdate.value.trim() === '') {
+    alert('Veuillez remplir le champ date de naissance');
+    birthdate.focus();
+    return false;
+  }
+  
+  if (quantity.value.trim() === '') {
+    alert('Veuillez remplir le champ nombre de tournois');
+    quantity.focus();
+    return false;
+  }
+  
+  if (validBirthdate() && validQuantity() && validLocationTournament() && validCondition()) {
+    openRemerciments();
+  } else {
+    alert('Merci de remplir correctement votre inscription');
+  }
+  
 }
 
 //----- BTN SUBMIT -----
@@ -249,3 +279,4 @@ function validate() {
 btnValid.addEventListener("click", function () {
   window.location.reload();
 });
+
