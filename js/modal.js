@@ -51,7 +51,7 @@ const quantityText = document.getElementById("quantityText");
 const locationText = document.getElementById("locationText");
 const conditionText = document.getElementById("conditionText");
 
-// ----- Evènement pour ouvrir ou fermer le Formulaire ------
+// ----- Evènement pour ouvrir ou fermer le Formulaire -----
 
 // Open modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", openModal));
@@ -59,17 +59,17 @@ modalBtn.forEach((btn) => btn.addEventListener("click", openModal));
 // Open modal form
 // Ajout a modalbg un display : block; au css css pour le faire apparaitre
 function openModal() {
-  modalbg.style.display = "block";
+  modalbg.style.display = "block";                           
 };
 
 // Hidemodal form
-// Ajout a modalbg un display : none; au css pour le faire disparaitre
+ // Ajout a modalbg un display : none; au css pour le faire disparaitre
 function hideModal() {
-  modalbg.style.display = "none";
+  modalbg.style.display = "none";                            
 };
 
 // Close modal form 
-modalBtnClose.addEventListener("click", function () {          // Évènement au click
+modalBtnClose.addEventListener("click", function() {          // Évènement au click
   modalbg.style.display = "none";                             // Pour fermer la modal avec le bouton close
 });
 
@@ -82,46 +82,45 @@ let regExTypeEmail = new RegExp(                              // Une expression 
 );
 
 // ----- Fonction générique pour les FirstName + LastName + Email -----
-firstName.addEventListener('change', function () {
-  generiqueValidate(this, regExTypeText, "Veuillez rentrer deux caractères minimum", firstText, this);
+firstName.addEventListener('change', function() {
+  generiqueValidate(this,regExTypeText,"Veuillez rentrer deux caractères minimum", firstText, this);
 });
 
-lastName.addEventListener('change', function () {
-  generiqueValidate(this, regExTypeText, "Veuillez rentrer deux caractères minimum", lastText, this);
+lastName.addEventListener('change', function() {
+  generiqueValidate(this,regExTypeText,"Veuillez rentrer deux caractères minimum", lastText, this);
 });
 
-email.addEventListener('change', function () {
-  generiqueValidate(this, regExTypeEmail, "Veuillez rentrer un adresse email valide", emailText, this);
+email.addEventListener('change', function() {
+  generiqueValidate(this,regExTypeEmail,"Veuillez rentrer un adresse email valide", emailText, this);
 });
 
-function generiqueValidate(input, regEx, msg, label, border) {    // Paramètres
+function generiqueValidate(input,regEx,msg,label,border) {    // Paramètres
 
   let testValid = regEx.test(input.value);                    // Un test du RegEx en récupérant la valeur
 
-  if (testValid) {
+   if(testValid) {
     label.innerHTML = "Champs Valide";
     label.classList.remove('text-danger');
     label.classList.add('text-succes');
     border.classList.remove('border-danger');
     border.classList.add('border-succes');
     return true;
-  } else {
+   }else {
     label.innerHTML = msg;
     label.classList.remove('text-succes');
     label.classList.add('text-danger');
     border.classList.remove('border-succes');
     border.classList.add('border-danger');
     return false;
-  }
+   }
 }
 
 // ----- ANNIVERSAIRE-----
-const validBirthdate = function () {
+const validBirthdate = function() {
   const birthdate = document.getElementById('birthdate');
   const birthdateText = document.getElementById('birthdateText');
-  const today = new Date(); // Date d'aujourd'hui
-
-  if (!birthdate.value) {
+  
+  if(!birthdate.value) {
     birthdateText.innerHTML = "Veuillez entrer une date de naissance valide";
     birthdateText.classList.remove('text-success');
     birthdateText.classList.add('text-danger');
@@ -129,42 +128,36 @@ const validBirthdate = function () {
     birthdate.classList.add('border-danger');
     return false;
   } else {
-    const inputDate = new Date(birthdate.value); // Date de naissance entrée par l'utilisateur
-    if (inputDate >= today) {
-      birthdateText.innerHTML = "La date de naissance doit être antérieure à la date d'aujourd'hui";
-      birthdateText.classList.remove('text-success');
-      birthdateText.classList.add('text-danger');
-      birthdate.classList.remove('border-success');
-      birthdate.classList.add('border-danger');
-      return false;
-    } else {
-      birthdateText.innerHTML = "Champs Valide";
-      birthdateText.classList.remove('text-danger');
-      birthdateText.classList.add('text-success');
-      birthdate.classList.remove('border-danger');
-      birthdate.classList.add('border-success');
-      return true;
-    }
+    birthdateText.innerHTML = "Champs Valide";
+    birthdateText.classList.remove('text-danger');
+    birthdateText.classList.add('text-success');
+    birthdate.classList.remove('border-danger');
+    birthdate.classList.add('border-success');
+    return true;
   }
 };
 
 // ----- NOMBRE DE TOURNOIS -----
-const validQuantity = function () {
-  if (quantity.value < 0) {       // Si la valeur est inférieure à 0
-    quantityText.innerHTML = "Merci d'indiquer un nombre de tournois valide";
+quantity.addEventListener('change', function() {
+  validQuantity(this);
+});
+
+const validQuantity = function() {
+  if(quantity.value <= 0) {       // Si la valeur est inférieure ou égale à 0
+    quantityText.innerHTML = "Merci d'indiquer le nombre de tournois";
     quantityText.classList.remove('text-succes');
     quantityText.classList.add('text-danger');
     quantity.classList.remove('border-succes');
     quantity.classList.add('border-danger');
     return false;
-  } else if (quantity.value > 50) {
+  }else if(quantity.value > 50) {
     quantityText.innerHTML = "Nous n'avons pas organisé autant de tournois !";
     quantityText.classList.remove('text-succes');
     quantityText.classList.add('text-danger');
     quantity.classList.remove('border-succes');
     quantity.classList.add('border-danger');
     return false;
-  } else {
+  }else {
     quantityText.innerHTML = "Champs Valide";
     quantityText.classList.remove('text-danger');
     quantityText.classList.add('text-succes');
@@ -178,10 +171,10 @@ const validQuantity = function () {
 
 // Fonctions pour les lieux de tournois si d'autres villes sont ajoutés dans le futur
 function verifLocationTournament() {
-  let locTournamentCheck = false;
-  for (let i = 0; i < locationTournament.length; i++) {
+  let locTournamentCheck = false; 
+  for(let i = 0; i < locationTournament.length; i++) {
     const isCheck = locationTournament[i].checked;
-    if (isCheck) {
+    if(isCheck) {
       locTournamentCheck = true;
       return true;
     }
@@ -189,37 +182,37 @@ function verifLocationTournament() {
   return false;
 }
 
-locationTournament.forEach((checkedBoxInput) => checkedBoxInput.addEventListener('change', function () {
-  validLocationTournament();
+locationTournament.forEach((checkedBoxInput) => checkedBoxInput.addEventListener('change', function() {
+  validLocationTournament(); 
 }));
 
 function validLocationTournament() {
-  if (!verifLocationTournament()) {
-    locationText.innerHTML = "Merci de cocher une ville";
-    locationText.classList.remove('text-succes');
-    locationText.classList.add('text-danger');
-    return false;
+  if(! verifLocationTournament()) {
+      locationText.innerHTML = "Merci de cocher une ville";
+      locationText.classList.remove('text-succes');
+      locationText.classList.add('text-danger');
+      return false;
   } else {
-    locationText.innerHTML = "Champs valide";
-    locationText.classList.remove('text-danger');
-    locationText.classList.add('text-succes');
-    return true;
+      locationText.innerHTML = "Champs valide";
+      locationText.classList.remove('text-danger');
+      locationText.classList.add('text-succes');
+      return true;
   }
 }
 
 // ----- CONDITIONS -----
-condition.addEventListener('change', function () {
-  validCondition(this);
+condition.addEventListener('change', function() {
+  validCondition(this); 
 });
 
 // Vérifie si les conditions sont biens cochées ou non
-const validCondition = function () {
-  if (condition.checked == false) {
+const validCondition = function() {
+  if(condition.checked == false ) {                  
     conditionText.innerHTML = "Merci d'accepter les conditions d'utilisations";
     conditionText.classList.remove('text-succes');
     conditionText.classList.add('text-danger');
     return false;
-  } else {
+  }else {
     conditionText.innerHTML = "Champs Valide";
     conditionText.classList.remove('text-danger');
     conditionText.classList.add('text-succes');
@@ -236,47 +229,23 @@ function openRemerciments() {
 
 function validate() {
   // Condition qui vérifie si tous les autres conditions retourne true
-  if (firstName.value.trim() === '') {
-    alert('Veuillez remplir le champ prénom');
-    firstName.focus();
-    return false;
-  }
-  
-  if (lastName.value.trim() === '') {
-    alert('Veuillez remplir le champ nom');
-    lastName.focus();
-    return false;
-  }
-  
-  if (email.value.trim() === '') {
-    alert('Veuillez remplir le champ email');
-    email.focus();
-    return false;
-  }
-  
-  if (birthdate.value.trim() === '') {
-    alert('Veuillez remplir le champ date de naissance');
-    birthdate.focus();
-    return false;
-  }
-  
-  if (quantity.value.trim() === '') {
-    alert('Veuillez remplir le champ nombre de tournois');
-    quantity.focus();
-    return false;
-  }
-  
-  if (validBirthdate() && validQuantity() && validLocationTournament() && validCondition()) {
+  if (generiqueValidate(firstName, regExTypeText, "firstname error", firstText, firstName)
+  && generiqueValidate(lastName, regExTypeText, "lastname error", lastText, lastName)
+  && generiqueValidate(email, regExTypeEmail, "email error", emailText, email)
+  && validBirthdate(birthdate) 
+  && validQuantity(quantity) 
+  && validLocationTournament()
+  && validCondition(condition)) {
+
     openRemerciments();
-  } else {
-    alert('Merci de remplir correctement votre inscription');
+
+  }else {
+    alert("Merci de remplir correctement votre inscription");
   }
-  
 }
 
 //----- BTN SUBMIT -----
 
-btnValid.addEventListener("click", function () {
+btnValid.addEventListener("click", function() { 
   window.location.reload();
 });
-
